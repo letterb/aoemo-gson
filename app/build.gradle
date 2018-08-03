@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.kotle.newgsonlib"
+        minSdkVersion 17
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+android.applicationVariants.all { variant ->  //module工程则为libraryVariants，主项目则是applicationVariants
+    variant.getJavaCompiler().doLast {
+        javaexec {
+            main = "-jar"
+            args = [
+                    "../obfuseSmaliText-master.jar",//第一个参数，必须是jar路径
+                    variant.applicationId,//第二个参数  签名的key（一般传入包名）与 Gson.EncryptionDecryptionKey一样
+                    //后面的参数传入需要混淆字符串的路径，可以多个(如果路径不存在，则会报错)
+                    "./build/tmp/kotlin-classes/debug",//kotlin的debug 编译路径
+                    // "./build/tmp/kotlin-classes/release"//kotlin的release 编译路径
+                    variant.getJavaCompiler().destinationDir//java类的编译路径
+            ]
+        }
+    }
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'com.android.support:appcompat-v7:28.0.0-beta01'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation project(':gson')
+}
+repositories {
+    mavenCentral()
+}
