@@ -55,6 +55,7 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
     private final JsonAdapterAnnotationTypeAdapterFactory jsonAdapterFactory;
     private final ReflectionAccessor accessor = ReflectionAccessor.getInstance();
     private EncryptionDecryption encryptionDecryption;
+
     public ReflectiveTypeAdapterFactory(ConstructorConstructor constructorConstructor,
                                         FieldNamingStrategy fieldNamingPolicy, Excluder excluder,
                                         JsonAdapterAnnotationTypeAdapterFactory jsonAdapterFactory) {
@@ -92,6 +93,9 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
         try {
             //todo gson解析，反射获取字段
             //如果需要解密，就返回解密的字符串
+            if (encryptionDecryption == null && Gson.EncryptionDecryptionKey != null) {
+                encryptionDecryption = new EncryptionDecryption(Gson.EncryptionDecryptionKey);
+            }
             if (encryptionDecryption != null) {
                 return Collections.singletonList(encryptionDecryption.decrypt(serializedName));
             }
