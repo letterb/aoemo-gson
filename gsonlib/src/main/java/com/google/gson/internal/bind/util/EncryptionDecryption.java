@@ -13,7 +13,7 @@ import javax.crypto.Cipher;
  * 描述：
  */
 public class EncryptionDecryption {
-    private static String strDefaultKey = "tourhb";
+    private static String strDefaultKey = "weijiale";
 
     /** 加密工具 */
     private Cipher encryptCipher = null;

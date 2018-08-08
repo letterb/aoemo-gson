@@ -14,6 +14,9 @@ class MainActivity : AppCompatActivity() {
         val gson= Gson()
         val json = gson.fromJson<Bean>(s, Bean::class.java)
         println(json.toString())
+        val b=Bean("222",1)
+        val (name,age)=b
+        name=="222"
     }
     data class Bean(val name:String,
                     val age:Int)
