@@ -90,17 +90,20 @@ public final class ReflectiveTypeAdapterFactory implements TypeAdapterFactory {
             return Collections.singletonList(name);
         }
         String serializedName = annotation.value();
-        try {
-            //todo gson解析，反射获取字段
-            //如果需要解密，就返回解密的字符串
-            if (encryptionDecryption == null && Gson.EncryptionDecryptionKey != null) {
-                encryptionDecryption = new EncryptionDecryption(Gson.EncryptionDecryptionKey);
+        //debug模式不解密
+        if (!Gson.isDebug) {
+            try {
+                //todo gson解析，反射获取字段
+                //如果需要解密，就返回解密的字符串
+                if (encryptionDecryption == null && Gson.EncryptionDecryptionKey != null) {
+                    encryptionDecryption = new EncryptionDecryption(Gson.EncryptionDecryptionKey);
+                }
+                if (encryptionDecryption != null) {
+                    return Collections.singletonList(encryptionDecryption.decrypt(serializedName));
+                }
+            } catch (Throwable e) {
+                e.printStackTrace();
             }
-            if (encryptionDecryption != null) {
-                return Collections.singletonList(encryptionDecryption.decrypt(serializedName));
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
         }
         String[] alternates = annotation.alternate();
         if (alternates.length == 0) {

@@ -115,6 +115,11 @@ public final class Gson {
     private static final String JSON_NON_EXECUTABLE_PREFIX = ")]}'\n";
     //加密解密的key
     public static String EncryptionDecryptionKey = null;
+    public static boolean isDebug = false;
+    public static void init(String decodeKey,boolean isDebug){
+        Gson.EncryptionDecryptionKey=decodeKey;
+        Gson.isDebug=isDebug;
+    }
     /**
      * This thread local guards against reentrant calls to getAdapter(). In
      * certain object graphs, creating an adapter for a type may recursively
